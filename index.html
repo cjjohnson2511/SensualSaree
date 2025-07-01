@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Miniapp - Loading</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .video-container {
+      position: relative;
+      display: inline-block;
+      max-height: 90vh;
+      max-width: 60vh; /* portrait approx */
+    }
+
+    video {
+      display: block;
+      height: 100%;
+      width: auto;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    /* SVG border fills container */
+    svg.border-trace {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    /* The rectangle stroke */
+    svg.border-trace rect {
+      fill: none;
+      stroke: white;
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-dasharray: 620; /* approx perimeter, will be updated dynamically */
+      stroke-dashoffset: 620;
+      animation-fill-mode: forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading-screen">
+    <div class="video-container" id="video-container">
+      <video id="load-video" autoplay muted playsinline></video>
+      <svg class="border-trace" id="border-svg" >
+        <rect id="border-rect" x="1" y="1" rx="10" ry="10" />
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    const videoElement = document.getElementById('load-video');
+    const svg = document.getElementById('border-svg');
+    const rect = document.getElementById('border-rect');
+    const videoContainer = document.getElementById('video-container');
+
+    // Pick a random video from loadscreen1 to loadscreen14
+    const randomIndex = Math.floor(Math.random() * 14) + 1;
+    const selectedVideo = `loadscreen${randomIndex}.mp4`;
+    videoElement.src = selectedVideo;
+
+    videoElement.addEventListener('loadedmetadata', () => {
+      const duration = videoElement.duration || 5;
+
+      // Resize SVG rect to match container size - 2px padding for stroke width
+      const w = videoContainer.clientWidth - 2;
+      const h = videoContainer.clientHeight - 2;
+
+      rect.setAttribute('width', w);
+      rect.setAttribute('height', h);
+
+      // Border radius - same as video container radius
+      rect.setAttribute('rx', 10);
+      rect.setAttribute('ry', 10);
+
+      // Calculate perimeter for dash array (rounded rectangle approx)
+      // Perimeter ~ 2*(w+h - 4*radius) + 2*PI*radius
+      const r = 10;
+      const perimeter = 2*(w + h - 2*r) + 2 * Math.PI * r;
+
+      rect.style.strokeDasharray = perimeter;
+      rect.style.strokeDashoffset = perimeter;
+
+      // Animate the dashoffset from perimeter -> 0 to draw border
+      rect.style.animation = `draw-border ${duration}s linear forwards`;
+    });
+
+    videoElement.addEventListener('ended', () => {
+      document.getElementById('loading-screen').style.display = 'none';
+    });
+  </script>
+
+  <style>
+    @keyframes draw-border {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+  </style>
+  
+</body>
+</html>
