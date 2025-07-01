@@ -82,9 +82,27 @@
     const rect = document.getElementById('border-rect');
     const videoContainer = document.getElementById('video-container');
 
-    // Pick a random video from loadscreen1 to loadscreen14
-    const randomIndex = Math.floor(Math.random() * 14) + 1;
-    const selectedVideo = `loadscreen${randomIndex}.mp4`;
+    // Array of your Google Drive direct download video URLs
+    const videoLinks = [
+      "https://drive.google.com/uc?export=download&id=1dANIiMrSRNtGA08eZMKbqam4Di_Mbo6j",
+      "https://drive.google.com/uc?export=download&id=1wllw_uldQB4PXnp5aUSXgEumsw-kUGwX",
+      "https://drive.google.com/uc?export=download&id=1B7li8dJuI3JtnTGWqemkkSB94S4ARzDe",
+      "https://drive.google.com/uc?export=download&id=1xBJ4xiWoAl-Xb1hgdUi0qh9GIH3f-RIR",
+      "https://drive.google.com/uc?export=download&id=1QHzG8UaHbBP7UwiuYniKUPNa5gl1Hzhj",
+      "https://drive.google.com/uc?export=download&id=1kBWSOU_faM972ed137s5di-wjj-kPrJq",
+      "https://drive.google.com/uc?export=download&id=13e7KLRWWS0Xoeoy8AfLarpy5_HJVOdMT",
+      "https://drive.google.com/uc?export=download&id=1zo6Yom3fELlGN1gvvIDV-hPOtBwXHYLo",
+      "https://drive.google.com/uc?export=download&id=1fqgg8Q7V9B4KyK2FEceX1jjnxDFBEhG7",
+      "https://drive.google.com/uc?export=download&id=1sxLC3j-ghlRiZ-hBvVlJnXqDWSCwFFlX",
+      "https://drive.google.com/uc?export=download&id=1llGVHXGKVupWagHFD8PLudpnjpGly-Th",
+      "https://drive.google.com/uc?export=download&id=1cn6B4TyZ8yxiBYAWY24Z9SY7LklpAZzM",
+      "https://drive.google.com/uc?export=download&id=1llGVHXGKVupWagHFD8PLudpnjpGly-Th",
+      "https://drive.google.com/uc?export=download&id=1fqgg8Q7V9B4KyK2FEceX1jjnxDFBEhG7"
+    ];
+
+    // Pick a random video URL from the array
+    const randomIndex = Math.floor(Math.random() * videoLinks.length);
+    const selectedVideo = videoLinks[randomIndex];
     videoElement.src = selectedVideo;
 
     videoElement.addEventListener('loadedmetadata', () => {
@@ -102,7 +120,6 @@
       rect.setAttribute('ry', 10);
 
       // Calculate perimeter for dash array (rounded rectangle approx)
-      // Perimeter ~ 2*(w+h - 4*radius) + 2*PI*radius
       const r = 10;
       const perimeter = 2*(w + h - 2*r) + 2 * Math.PI * r;
 
@@ -125,6 +142,6 @@
       }
     }
   </style>
-  
+
 </body>
 </html>
